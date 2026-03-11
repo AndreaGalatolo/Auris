@@ -1,0 +1,71 @@
+/* ============================================================
+   Auris — tokens.css
+   All design tokens as CSS custom properties.
+   Single source of truth for colors, typography, spacing.
+   ============================================================ */
+
+:root {
+
+  /* ── Color palette ──────────────────────────────────────── */
+  --color-bg:          #080b0f;
+  --color-surface-1:   #0e1318;
+  --color-surface-2:   #151c24;
+  --color-border-1:    #1e2a35;
+  --color-border-2:    #263340;
+
+  --color-accent:      #00d4aa;
+  --color-accent-glow: rgba(0, 212, 170, 0.4);
+  --color-accent-dim:  rgba(0, 212, 170, 0.08);
+  --color-blue:        #0099ff;
+  --color-danger:      #ff6b35;
+  --color-heart:       #ff6b6b;
+
+  --color-text-1:      #dde6ed;
+  --color-text-2:      #8fa3b0;
+  --color-text-3:      #5a7080;
+  --color-text-4:      #3d5060;
+
+  /* ── Typography ─────────────────────────────────────────── */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body:    'Geist', system-ui, sans-serif;
+  --font-mono:    'DM Mono', 'Fira Code', monospace;
+
+  --text-xs:   0.65rem;   /* 10.4px */
+  --text-sm:   0.75rem;   /* 12px   */
+  --text-base: 0.875rem;  /* 14px   */
+  --text-md:   1rem;      /* 16px   */
+  --text-lg:   1.125rem;  /* 18px   */
+  --text-xl:   1.375rem;  /* 22px   */
+
+  /* ── Spacing ────────────────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ── Radii ──────────────────────────────────────────────── */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ────────────────────────────────────────────── */
+  --shadow-accent: 0 8px 32px rgba(0, 212, 170, 0.2);
+  --shadow-sm:     0 2px 8px rgba(0, 0, 0, 0.4);
+
+  /* ── Transitions ────────────────────────────────────────── */
+  --transition-fast:   0.15s ease;
+  --transition-base:   0.2s ease;
+  --transition-slow:   0.35s ease;
+
+  /* ── Z-index scale ──────────────────────────────────────── */
+  --z-base:    0;
+  --z-overlay: 10;
+  --z-top:     100;
+}

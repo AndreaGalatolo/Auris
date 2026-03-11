@@ -1,0 +1,154 @@
+/* ============================================================
+   Auris — layout.css
+   Page-level layout: body, header, hero, main grid, footer.
+   ============================================================ */
+
+/* ── Body & background ──────────────────────────────────── */
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text-1);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Ambient radial gradient — purely decorative */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 80vw 60vh at 20% -10%, rgba(0, 212, 170, 0.055) 0%, transparent 60%),
+    radial-gradient(ellipse 60vw 50vh at 80% 110%, rgba(0, 153, 255, 0.045) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: var(--z-base);
+}
+
+/* ── App container ───────────────────────────────────────── */
+
+.app {
+  position: relative;
+  z-index: var(--z-overlay);
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 var(--space-6) var(--space-16);
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6) 0 var(--space-12);
+  border-bottom: 1px solid var(--color-border-1);
+  margin-bottom: var(--space-12);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  text-decoration: none;
+}
+
+.wordmark__name {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--color-text-1);
+  letter-spacing: -0.02em;
+}
+
+.wordmark__badge {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 1px solid rgba(0, 212, 170, 0.25);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ── Hero ────────────────────────────────────────────────── */
+
+.hero {
+  margin-bottom: var(--space-12);
+}
+
+.hero__heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--color-text-1);
+  margin-bottom: var(--space-4);
+}
+
+.hero__heading em {
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.hero__subtitle {
+  font-size: var(--text-md);
+  color: var(--color-text-3);
+  line-height: 1.75;
+  max-width: 520px;
+  font-weight: 300;
+  margin-bottom: var(--space-5);
+}
+
+/* ── Main two-column grid ────────────────────────────────── */
+
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+@media (max-width: 640px) {
+  .input-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+
+.site-footer {
+  margin-top: var(--space-16);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border-1);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.footer__info {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-4);
+  line-height: 1.8;
+}
+
+.footer__info a {
+  color: var(--color-text-3);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.footer__info a:hover {
+  color: var(--color-accent);
+}
