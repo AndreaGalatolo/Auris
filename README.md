@@ -4,8 +4,8 @@
 Record mic + system audio, or import any audio/video file.  
 Everything runs in your browser — zero server, zero upload, zero account.
 
-[![Open Source](https://img.shields.io/badge/open%20source-free%20forever-00d4aa?style=flat-square)](https://github.com/YOUR_USERNAME/auris)
-[![Ko-fi](https://img.shields.io/badge/support-ko--fi-ff6b6b?style=flat-square)](https://ko-fi.com/YOUR_KOFI)
+[![Open Source](https://img.shields.io/badge/open%20source-free%20forever-00d4aa?style=flat-square)](https://github.com/AndreaGalatolo/auris)
+[![Ko-fi](https://img.shields.io/badge/support-ko--fi-ff6b6b?style=flat-square)](https://ko-fi.com/andreagalatolo)
 
 ---
 
@@ -84,7 +84,7 @@ Models are downloaded once and cached by the browser (`env.useBrowserCache = tru
 
 ## Support
 
-If Auris saves you time, consider [buying me a coffee ☕](https://ko-fi.com/YOUR_KOFI).  
+If Auris saves you time, consider [buying me a coffee ☕](https://ko-fi.com/andreagalatolo).  
 It helps keep the project free and maintained.
 
 ---
