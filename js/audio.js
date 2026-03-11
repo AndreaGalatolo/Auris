@@ -94,12 +94,23 @@ async function startRecord(source) {
     return;
   }
 
-  // Waveform analyser on the chosen stream
+  // AudioContext must be created inside a user gesture and explicitly resumed —
+  // some browsers start it in 'suspended' state even inside a click handler.
   const audioCtx = new AudioContext();
-  state.audioCtx = audioCtx;
+  state.audioCtx  = audioCtx;
+  if (audioCtx.state === "suspended") {
+    await audioCtx.resume();
+  }
+
+  // Wrap the audio tracks in a fresh MediaStream before passing to
+  // createMediaStreamSource — avoids a Chrome/Safari bug where an already-
+  // consumed stream produces a flat signal in the analyser.
+  const analyserSource = audioCtx.createMediaStreamSource(
+    new MediaStream(analyserStream.getAudioTracks())
+  );
   state.analyser = audioCtx.createAnalyser();
   state.analyser.fftSize = 2048;
-  audioCtx.createMediaStreamSource(analyserStream).connect(state.analyser);
+  analyserSource.connect(state.analyser);
 
   // MediaRecorder — always receives a genuine MediaStream
   const mime = pickMimeType();
