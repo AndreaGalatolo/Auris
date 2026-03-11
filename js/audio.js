@@ -67,25 +67,44 @@ export async function toggleRecord(source) {
 // ── Recording ─────────────────────────────────────────────
 
 async function startRecord(source) {
-  let mixStream;
+  // recordStream  → what MediaRecorder captures (always a real MediaStream)
+  // analyserStream → what the waveform visualiser reads from
+  let recordStream;
+  let analyserStream;
 
   try {
-    mixStream = await buildAudioStream(source);
+    if (source === "mic") {
+      // Direct mic stream — bypass Web Audio entirely for reliable recording
+      recordStream  = await getMicStream();
+      analyserStream = recordStream;
+
+    } else if (source === "system") {
+      recordStream  = await getSystemStream();
+      analyserStream = recordStream;
+
+    } else {
+      // "both" — mix via Web Audio, record the destination node
+      const { destStream, micStream, sysStream } = await getMixStream();
+      recordStream   = destStream;
+      analyserStream = destStream;
+      state.streams.push(micStream, sysStream);
+    }
   } catch (err) {
     setStatus("red", "Access denied: " + err.message);
     return;
   }
 
-  // Waveform analyser on the mix
-  state.audioCtx = state.audioCtx ?? new AudioContext();
-  state.analyser = state.audioCtx.createAnalyser();
+  // Waveform analyser on the chosen stream
+  const audioCtx = new AudioContext();
+  state.audioCtx = audioCtx;
+  state.analyser = audioCtx.createAnalyser();
   state.analyser.fftSize = 2048;
-  state.audioCtx.createMediaStreamSource(mixStream).connect(state.analyser);
+  audioCtx.createMediaStreamSource(analyserStream).connect(state.analyser);
 
-  // MediaRecorder
+  // MediaRecorder — always receives a genuine MediaStream
   const mime = pickMimeType();
   state.chunks        = [];
-  state.mediaRecorder = new MediaRecorder(mixStream, { mimeType: mime });
+  state.mediaRecorder = new MediaRecorder(recordStream, { mimeType: mime });
 
   state.mediaRecorder.ondataavailable = (e) => {
     if (e.data.size > 0) state.chunks.push(e.data);
@@ -122,41 +141,63 @@ function stopRecord() {
   state.isRecording = false;
 }
 
-async function buildAudioStream(source) {
-  const audioCtx = new AudioContext();
-  state.audioCtx = audioCtx;
-  const dest = audioCtx.createMediaStreamDestination();
+// ── Stream builders ───────────────────────────────────────
 
-  if (source === "mic" || source === "both") {
-    const micStream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: true, noiseSuppression: true },
-      video: false,
+async function getMicStream() {
+  const stream = await navigator.mediaDevices.getUserMedia({
+    audio: {
+      echoCancellation: true,
+      noiseSuppression: true,
+      sampleRate: 16_000,
+    },
+    video: false,
+  });
+  state.streams.push(stream);
+  return stream;
+}
+
+async function getSystemStream() {
+  const stream = await navigator.mediaDevices.getDisplayMedia({
+    video: true,
+    audio: true,
+  });
+  // Drop video track — audio only
+  stream.getVideoTracks().forEach(t => t.stop());
+  if (stream.getAudioTracks().length === 0) {
+    throw new Error("No system audio found. Enable 'Share audio' in the browser dialog.");
+  }
+  state.streams.push(stream);
+  return stream;
+}
+
+async function getMixStream() {
+  const micStream = await navigator.mediaDevices.getUserMedia({
+    audio: { echoCancellation: true, noiseSuppression: true },
+    video: false,
+  });
+
+  let sysStream = null;
+  try {
+    sysStream = await navigator.mediaDevices.getDisplayMedia({
+      video: true, audio: true,
     });
-    state.streams.push(micStream);
-    audioCtx.createMediaStreamSource(micStream).connect(dest);
-  }
-
-  if (source === "system" || source === "both") {
-    try {
-      const sysStream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-        audio: true,
-      });
-      // Drop the video track — we only want audio
-      sysStream.getVideoTracks().forEach(t => t.stop());
-      if (sysStream.getAudioTracks().length === 0) {
-        throw new Error("No system audio captured. Enable 'Share audio' in the browser dialog.");
-      }
-      state.streams.push(sysStream);
-      audioCtx.createMediaStreamSource(sysStream).connect(dest);
-    } catch (err) {
-      if (source === "system") throw err;
-      // In 'both' mode, fall back to mic-only silently
-      console.warn("System audio unavailable, using mic only:", err.message);
+    sysStream.getVideoTracks().forEach(t => t.stop());
+    if (sysStream.getAudioTracks().length === 0) {
+      throw new Error("No system audio track found.");
     }
+  } catch (err) {
+    console.warn("System audio unavailable in mix mode, using mic only:", err.message);
   }
 
-  return dest.stream;
+  // Build a mixed destination via Web Audio
+  const audioCtx = new AudioContext();
+  state.audioCtx  = audioCtx;
+  const dest      = audioCtx.createMediaStreamDestination();
+
+  audioCtx.createMediaStreamSource(micStream).connect(dest);
+  if (sysStream) audioCtx.createMediaStreamSource(sysStream).connect(dest);
+
+  return { destStream: dest.stream, micStream, sysStream: sysStream ?? micStream };
 }
 
 function stopAllStreams() {
