@@ -11,11 +11,7 @@
 import { initWaveform, toggleRecord, setAudioBlob, getAudioBlob } from "./audio.js";
 import { loadModel, transcribe }                                    from "./transcriber.js";
 import { copyToClipboard, downloadTxt, downloadSrt }               from "./export.js";
-import { setActiveSourceTab, setFileLoaded, setDropzoneDragOver, setAudioReadyFlag } from "./ui.js";
-
-// ── App state ─────────────────────────────────────────────
-
-let currentSource = "mic";  // 'mic' | 'system' | 'both'
+import { setFileLoaded, setDropzoneDragOver, setAudioReadyFlag }   from "./ui.js";
 
 // ── Init ──────────────────────────────────────────────────
 
@@ -34,24 +30,13 @@ function bindEvents() {
     loadModel(modelId);
   });
 
-  // Source tabs
-  document.querySelectorAll(".source-tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      currentSource = tab.dataset.source;
-      setActiveSourceTab(tab);
-    });
-  });
-
-  // Record toggle
+  // Record toggle — always system source
   document.getElementById("btnRecord").addEventListener("click", () => {
-    toggleRecord(currentSource);
+    toggleRecord("system");
   });
 
-  // "Use this recording" button — audio is already set, just confirm
-  document.getElementById("btnUseRecording").addEventListener("click", () => {
-    // Audio blob was set inside audio.js on recorder stop.
-    // This button is a UX confirmation; state is already correct.
-  });
+  // "Use this recording" — confirmation only, state already set in audio.js
+  document.getElementById("btnUseRecording").addEventListener("click", () => {});
 
   // File import — click
   document.getElementById("dropzone").addEventListener("click", () => {
@@ -94,7 +79,7 @@ function bindEvents() {
   });
 
   // Export actions
-  document.querySelector("[data-action='copy']").addEventListener("click",        copyToClipboard);
+  document.querySelector("[data-action='copy']").addEventListener("click",         copyToClipboard);
   document.querySelector("[data-action='download-txt']").addEventListener("click", downloadTxt);
   document.querySelector("[data-action='download-srt']").addEventListener("click", downloadSrt);
 }
