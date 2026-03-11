@@ -42,19 +42,6 @@ auris/
 
 ---
 
-## Deploy to GitHub Pages (free)
-
-1. Fork or clone this repo
-2. Replace `YOUR_USERNAME` with your GitHub username in `index.html`
-3. Replace `YOUR_KOFI` with your Ko-fi username in `index.html`
-4. Push to a GitHub repo named `auris`
-5. Go to **Settings → Pages → Branch: main → Save**
-6. Your app is live at `https://YOUR_USERNAME.github.io/auris`
-
-No build step, no npm, no dependencies — just static files.
-
----
-
 ## Run locally
 
 ```bash
