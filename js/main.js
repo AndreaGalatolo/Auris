@@ -9,9 +9,10 @@
 "use strict";
 
 import { initWaveform, toggleRecord, setAudioBlob, getAudioBlob } from "./audio.js";
-import { loadModel, transcribe }                                    from "./transcriber.js";
+import { loadModel, transcribe, getSegments }                      from "./transcriber.js";
 import { copyToClipboard, downloadTxt, downloadSrt }               from "./export.js";
-import { setFileLoaded, setDropzoneDragOver, setAudioReadyFlag }   from "./ui.js";
+import { setFileLoaded, setDropzoneDragOver, setAudioReadyFlag, renderTranscript } from "./ui.js";
+import { renderEditor, exitEditor, getEditedSegments }             from "./subtitle-editor.js";
 
 // ── Init ──────────────────────────────────────────────────
 
@@ -79,9 +80,27 @@ function bindEvents() {
   });
 
   // Export actions
-  document.querySelector("[data-action='copy']").addEventListener("click",         copyToClipboard);
+  document.querySelector("[data-action='copy']").addEventListener("click", copyToClipboard);
   document.querySelector("[data-action='download-txt']").addEventListener("click", downloadTxt);
   document.querySelector("[data-action='download-srt']").addEventListener("click", downloadSrt);
+
+  // Subtitle editor actions
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("[data-action='edit']")) {
+      const segments = getSegments();
+      renderEditor(segments);
+    }
+    if (e.target.closest("[data-action='save-changes']")) {
+      const edited = getEditedSegments();
+      exitEditor();
+      renderTranscript(edited, "", "segments");
+    }
+    if (e.target.closest("[data-action='cancel-edit']")) {
+      exitEditor();
+      const segments = getSegments();
+      renderTranscript(segments, "", "segments");
+    }
+  });
 }
 
 // ── File handling ─────────────────────────────────────────

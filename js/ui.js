@@ -200,6 +200,33 @@ export function renderTranscript(segments, language, mode) {
         </div>`;
     })
     .join("");
+
+  ensureEditButton();
+}
+
+export function ensureEditButton() {
+  const actions = document.querySelector(".transcript__actions");
+  if (!actions) return;
+
+  if (actions.querySelector("[data-action='edit']")) return;
+
+  const editBtn = document.createElement("button");
+  editBtn.className = "btn btn--action";
+  editBtn.setAttribute("data-action", "edit");
+  editBtn.textContent = "✎ Edit";
+  actions.insertBefore(editBtn, actions.firstChild);
+
+  const saveBtn = document.createElement("button");
+  saveBtn.className = "btn btn--action hidden";
+  saveBtn.setAttribute("data-action", "save-changes");
+  saveBtn.textContent = "✓ Save changes";
+  actions.insertBefore(saveBtn, actions.firstChild);
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.className = "btn btn--action hidden";
+  cancelBtn.setAttribute("data-action", "cancel-edit");
+  cancelBtn.textContent = "Cancel";
+  actions.insertBefore(cancelBtn, actions.firstChild);
 }
 
 export function setTranscriptError(message) {
