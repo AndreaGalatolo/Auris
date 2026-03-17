@@ -8,6 +8,7 @@
 "use strict";
 
 import { getSegments, getLanguage } from "./transcriber.js";
+import { getEditedSegments, isEditing } from "./subtitle-editor.js";
 
 // ── Public API ────────────────────────────────────────────
 
@@ -39,13 +40,15 @@ export function downloadSrt() {
 // ── Builders ──────────────────────────────────────────────
 
 function buildPlainText() {
-  const segments = getSegments();
+  const edited = isEditing() ? getEditedSegments() : null;
+  const segments = edited ?? getSegments();
   if (!segments.length) return null;
   return segments.map(s => s.text.trim()).join("\n");
 }
 
 function buildSrt() {
-  const segments = getSegments();
+  const edited = isEditing() ? getEditedSegments() : null;
+  const segments = edited ?? getSegments();
   if (!segments.length) return null;
 
   return segments
