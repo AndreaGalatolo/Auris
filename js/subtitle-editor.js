@@ -70,8 +70,8 @@ function attachEditorListeners() {
 
   segments.forEach((seg, idx) => {
     const startInput = seg.querySelector(".segment__time-start");
-    const endInput = seg.querySelector(".segment__time-end");
-    const textInput = seg.querySelector(".segment__text-input");
+    const endInput   = seg.querySelector(".segment__time-end");
+    const textInput  = seg.querySelector(".segment__text-input");
 
     startInput?.addEventListener("change", () => {
       const seconds = parseTimeInput(startInput.value);
@@ -103,12 +103,12 @@ function toggleEditorButtons() {
   const actions = document.querySelector(".transcript__actions");
   if (!actions) return;
 
-  const saveBtn = actions.querySelector("[data-action='save-changes']");
+  const saveBtn   = actions.querySelector("[data-action='save-changes']");
   const cancelBtn = actions.querySelector("[data-action='cancel-edit']");
-  const editBtn = actions.querySelector("[data-action='edit']");
-  const copyBtn = actions.querySelector("[data-action='copy']");
-  const dlTxtBtn = actions.querySelector("[data-action='download-txt']");
-  const dlSrtBtn = actions.querySelector("[data-action='download-srt']");
+  const editBtn   = actions.querySelector("[data-action='edit']");
+  const copyBtn   = actions.querySelector("[data-action='copy']");
+  const dlTxtBtn  = actions.querySelector("[data-action='download-txt']");
+  const dlSrtBtn  = actions.querySelector("[data-action='download-srt']");
 
   if (isEditingMode) {
     saveBtn?.classList.remove("hidden");
@@ -127,47 +127,48 @@ function toggleEditorButtons() {
   }
 }
 
+/**
+ * Parse a time string in MM:SS format to seconds.
+ * Accepts: "01:30" → 90, "0:05" → 5
+ * Returns null if the format is invalid.
+ * @param {string} str
+ * @returns {number|null}
+ */
 function parseTimeInput(str) {
   const trimmed = str.trim();
   if (!trimmed) return null;
 
-  const patterns = [
-    /^(\d+):(\d{2})(?::(\d{2}))?$/,
-    /^(\d{1,2}):(\d{2})$/,
-  ];
+  // Only support MM:SS — matches what formatTime produces
+  const match = trimmed.match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) return null;
 
-  for (const pattern of patterns) {
-    const match = trimmed.match(pattern);
-    if (match) {
-      const mins = parseInt(match[1], 10);
-      const secs = parseInt(match[2], 10);
-      const ms = match[3] ? parseInt(match[3], 10) : 0;
+  const mins = parseInt(match[1], 10);
+  const secs = parseInt(match[2], 10);
 
-      if (mins >= 0 && secs >= 0 && secs < 60 && ms >= 0 && ms < 60) {
-        return mins * 60 + secs + ms / 100;
-      }
-    }
-  }
+  if (mins < 0 || secs < 0 || secs > 59) return null;
 
-  return null;
+  return mins * 60 + secs;
 }
 
+/**
+ * Format seconds to MM:SS string.
+ * @param {number} seconds
+ * @returns {string}
+ */
 function formatTime(seconds) {
-  const m = Math.floor(seconds / 60)
-    .toString()
-    .padStart(2, "0");
-  const s = Math.floor(seconds % 60)
-    .toString()
-    .padStart(2, "0");
+  const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+  const s = Math.floor(seconds % 60).toString().padStart(2, "0");
   return `${m}:${s}`;
 }
 
+/**
+ * Seek the active audio player to a given time.
+ * Uses importPlayer only — recPlayer has been removed from the UI.
+ * @param {number} timeSeconds
+ */
 function seekAudio(timeSeconds) {
-  const recPlayer = document.getElementById("recPlayer");
-  const importPlayer = document.getElementById("importPlayer");
-  const player = recPlayer?.src ? recPlayer : importPlayer;
-
-  if (player && player.src) {
+  const player = document.getElementById("importPlayer");
+  if (player?.src) {
     player.currentTime = timeSeconds;
   }
 }
