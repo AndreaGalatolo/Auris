@@ -119,19 +119,6 @@ auris/
 
 ## Deploy
 
-### Cloudflare Pages (recommended)
-
-Cloudflare Pages is the recommended host because it supports custom HTTP headers,
-which are required to enable `SharedArrayBuffer` (used by Whisper WASM).
-
-1. Go to [dash.cloudflare.com](https://dash.cloudflare.com) → Workers & Pages → Create application → **Pages**
-2. Connect your GitHub repo
-3. Build settings: framework **None**, build command and output directory **empty**
-4. Deploy — your app is live at `your-project.pages.dev`
-
-The `_headers` file sets `Cross-Origin-Opener-Policy: same-origin` and
-`Cross-Origin-Embedder-Policy: require-corp` automatically on every response.
-
 ### GitHub Pages
 
 GitHub Pages does not support custom HTTP headers, so `SharedArrayBuffer` will be
