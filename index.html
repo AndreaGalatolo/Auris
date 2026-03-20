@@ -14,7 +14,7 @@
 
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#00d4aa">
-  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,7 +44,6 @@
          rel="noopener noreferrer"
          class="link--github"
          aria-label="View source on GitHub">
-        <!-- GitHub icon -->
         <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
                    0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
@@ -81,7 +80,6 @@
       Whisper AI runs entirely in your browser — your files never leave your device.
     </p>
     <div class="privacy-pill" role="note">
-      <!-- Shield icon -->
       <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor"
            stroke-width="2" aria-hidden="true">
         <path d="M6 1L1 3v4c0 2.5 2.1 4.5 5 5 2.9-.5 5-2.5 5-5V3L6 1z"/>
@@ -133,7 +131,6 @@
     </div>
 
     <button class="btn btn--load" id="loadBtn" type="button">
-      <!-- Download icon -->
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
            stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M7 1v8M4 6l3 3 3-3"/>
@@ -201,8 +198,6 @@
   <!-- ══ Step 2: Audio input ═════════════════════════════ -->
   <div class="input-grid">
 
-
-
     <!-- Record panel -->
     <section class="card" aria-labelledby="step2aLabel">
       <p class="eyebrow" id="step2aLabel">Step 2a — Record system audio</p>
@@ -242,8 +237,8 @@
       </div>
 
       <!-- Playback -->
-      <video class="video-player" id="importPlayer" controls
-            aria-label="Imported file playback"></video>
+      <audio class="audio-player" id="recPlayer" controls
+             aria-label="Recorded audio playback"></audio>
     </section>
 
 
@@ -256,10 +251,10 @@
         <div class="dropzone__icon" aria-hidden="true">⬆</div>
         <p class="dropzone__text">
           <strong>Click to browse</strong> or drag &amp; drop<br>
-          any audio or video file
+          any audio or video file — audio is extracted automatically
         </p>
         <p class="dropzone__formats" aria-label="Supported formats">
-          mp4 · mov · mkv · mp3 · wav · m4a · webm · ogg · flac
+          mp4 · mov · mkv · avi · mp3 · wav · m4a · webm · ogg · flac
         </p>
       </div>
 
@@ -273,8 +268,8 @@
       <div class="file-info" id="fileInfo" role="status" aria-live="polite"></div>
 
       <!-- Playback -->
-      <audio class="audio-player" id="importPlayer" controls
-             aria-label="Imported audio playback"></audio>
+      <video class="video-player" id="importPlayer" controls
+             aria-label="Imported file playback"></video>
     </section>
 
   </div>
@@ -284,7 +279,6 @@
   <div class="transcribe-wrap">
     <button class="btn btn--transcribe" id="btnTranscribe" type="button" disabled
             aria-label="Start transcription">
-      <!-- Lines icon -->
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
            stroke="currentColor" stroke-width="1.8" aria-hidden="true">
         <path d="M2 4h12M2 8h8M2 12h10"/>
@@ -316,14 +310,14 @@
               id="langBadge"
               aria-label="Detected language"></span>
       </div>
-      
+
       <div class="transcript__search">
         <input type="search"
-              id="transcriptSearch"
-              class="transcript__search-input"
-              placeholder="Search…"
-              aria-label="Search transcript"
-              disabled>
+               id="transcriptSearch"
+               class="transcript__search-input"
+               placeholder="Search…"
+               aria-label="Search transcript"
+               disabled>
         <span class="transcript__search-count" id="searchCount" aria-live="polite"></span>
       </div>
 
@@ -353,7 +347,7 @@
   <footer class="site-footer">
     <div class="footer__info">
       <strong>Auris</strong> is
-      <a href="https://github.com/AndreaGalatolo/auris"
+      <a href="https://github.com/AndreaGalatolo/Auris"
          target="_blank" rel="noopener noreferrer">open source</a>
       and free forever.<br>
       Powered by
