@@ -114,7 +114,9 @@ export function setFileLoaded(filename, objectUrl) {
 
   const player = document.getElementById("importPlayer");
   player.src = objectUrl;
+  // Supporta sia audio-player che video-player
   player.classList.add("audio-player--visible");
+  player.classList.add("video-player--visible");
 
   setStatus("green", `File loaded: ${filename} — press Transcribe`);
   updateTranscribeBtn();
