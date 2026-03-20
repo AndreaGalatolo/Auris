@@ -43,7 +43,8 @@ auris/
     ├── audio.js            # Recording, Web Audio API, waveform canvas
     ├── transcriber.js      # Whisper model loading + transcription
     ├── export.js           # TXT / SRT file generation and download
-    └── ui.js               # All DOM updates — single source of truth
+    ├── ui.js               # All DOM updates — single source of truth
+    └── subtitle-editor.js  # Segment editing interface — timestamps and text
 ```
 
 ---
