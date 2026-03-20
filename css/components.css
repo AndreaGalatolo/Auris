@@ -824,6 +824,7 @@ mark {
   display: none;
 }
 
-.video-player.audio-player--visible {
+.video-player.audio-player--visible,
+.video-player.video-player--visible {
   display: block;
 }
