@@ -18,21 +18,21 @@ const CDN_CACHE      = `${CACHE_VERSION}-cdn`;
 
 // App shell — all local static files
 const SHELL_ASSETS = [
-  "/",
-  "/index.html",
-  "/css/reset.css",
-  "/css/tokens.css",
-  "/css/layout.css",
-  "/css/components.css",
-  "/css/animations.css",
-  "/js/main.js",
-  "/js/audio.js",
-  "/js/transcriber.js",
-  "/js/export.js",
-  "/js/ui.js",
-  "/js/subtitle-editor.js",
-  "/js/transcript-search.js",
-  "/manifest.json",
+  "./",
+  "./index.html",
+  "./css/reset.css",
+  "./css/tokens.css",
+  "./css/layout.css",
+  "./css/components.css",
+  "./css/animations.css",
+  "./js/main.js",
+  "./js/audio.js",
+  "./js/transcriber.js",
+  "./js/export.js",
+  "./js/ui.js",
+  "./js/subtitle-editor.js",
+  "./js/transcript-search.js",
+  "./manifest.json",
 ];
 
 // ── Install ───────────────────────────────────────────────
@@ -144,11 +144,11 @@ function isShellRequest(url) {
   return (
     url.hostname === self.location.hostname &&
     (
-      url.pathname === "/" ||
+      url.pathname.endsWith("/") ||
       url.pathname.endsWith(".html") ||
-      url.pathname.startsWith("/css/") ||
-      url.pathname.startsWith("/js/") ||
-      url.pathname === "/manifest.json"
+      url.pathname.includes("/css/") ||
+      url.pathname.includes("/js/") ||
+      url.pathname.endsWith("manifest.json")
     )
   );
 }
