@@ -811,3 +811,13 @@ mark {
   border-radius: 2px;
   padding: 0 2px;
 }
+
+/* ── Video player ────────────────────────────────────────── */
+
+.video-player {
+  width: 100%;
+  max-height: 200px;
+  border-radius: var(--radius-sm);
+  background: #000;
+  margin-top: var(--space-3);
+}
