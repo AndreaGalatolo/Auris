@@ -24,6 +24,12 @@ import {
   setStatus,
 } from "./ui.js";
 
+// ── Constants ─────────────────────────────────────────────
+
+const CHUNK_LENGTH_S  = 20;
+const STRIDE_LENGTH_S = 4;
+const SAMPLE_RATE     = 16_000;
+
 // ── Module state ──────────────────────────────────────────
 
 let pipeline     = null;
@@ -44,7 +50,6 @@ export async function loadModel(modelId) {
   setModelLoading();
 
   try {
-    // Dynamic import of transformers — avoids blocking initial page load
     const { pipeline: createPipeline, env } = await import(
       "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js"
     );
@@ -58,8 +63,8 @@ export async function loadModel(modelId) {
       "automatic-speech-recognition",
       modelId,
       {
-        chunk_length_s:  30,
-        stride_length_s: 5,
+        chunk_length_s:  CHUNK_LENGTH_S,
+        stride_length_s: STRIDE_LENGTH_S,
         progress_callback: (progress) => {
           if (progress.status === "downloading") {
             const pct  = progress.total
@@ -95,18 +100,22 @@ export async function transcribe(audioBlob, { language = null, outputMode = "seg
   showProcessing();
 
   try {
-    const audioData = await decodeAudioBlob(audioBlob);
+    const audioData  = await decodeAudioBlob(audioBlob);
+    const totalChunks = estimateTotalChunks(audioData.length);
 
     let chunkIndex = 0;
+
     const result = await pipeline(audioData, {
       language:          language || null,
       task:              "transcribe",
       return_timestamps: true,
-      chunk_length_s:    20,
-      stride_length_s:   4,
+      chunk_length_s:    CHUNK_LENGTH_S,
+      stride_length_s:   STRIDE_LENGTH_S,
       callback_function: () => {
         chunkIndex++;
-        updateProcessingDetail(`Processing chunk ${chunkIndex}…`);
+        updateProcessingDetail(
+          `Processing chunk ${chunkIndex} / ${totalChunks}…`
+        );
       },
     });
 
@@ -135,7 +144,7 @@ export async function transcribe(audioBlob, { language = null, outputMode = "seg
  */
 async function decodeAudioBlob(blob) {
   const arrayBuffer = await blob.arrayBuffer();
-  const audioCtx    = new AudioContext({ sampleRate: 16_000 });
+  const audioCtx    = new AudioContext({ sampleRate: SAMPLE_RATE });
 
   const decoded = await audioCtx.decodeAudioData(arrayBuffer);
   const mono    = decoded.numberOfChannels > 1
@@ -167,4 +176,16 @@ function mixDownToMono(audioBuffer) {
   }
 
   return mono;
+}
+
+/**
+ * Estimate the number of chunks Whisper will process.
+ * Based on effective step size: chunk_length - stride_length.
+ * @param {number} sampleCount  Length of the Float32Array
+ * @returns {number}
+ */
+function estimateTotalChunks(sampleCount) {
+  const durationSeconds = sampleCount / SAMPLE_RATE;
+  const stepSeconds     = CHUNK_LENGTH_S - STRIDE_LENGTH_S; // 16s effective step
+  return Math.max(1, Math.ceil(durationSeconds / stepSeconds));
 }
