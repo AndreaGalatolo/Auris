@@ -102,8 +102,8 @@ export async function transcribe(audioBlob, { language = null, outputMode = "seg
       language:          language || null,
       task:              "transcribe",
       return_timestamps: true,
-      chunk_length_s:    30,
-      stride_length_s:   5,
+      chunk_length_s:    20,
+      stride_length_s:   4,
       callback_function: () => {
         chunkIndex++;
         updateProcessingDetail(`Processing chunk ${chunkIndex}…`);
