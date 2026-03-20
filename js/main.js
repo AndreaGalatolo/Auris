@@ -13,12 +13,14 @@ import { loadModel, transcribe, getSegments }                      from "./trans
 import { copyToClipboard, downloadTxt, downloadSrt }               from "./export.js";
 import { setFileLoaded, setDropzoneDragOver, setAudioReadyFlag, renderTranscript } from "./ui.js";
 import { renderEditor, exitEditor, getEditedSegments }             from "./subtitle-editor.js";
+import { initSearch, enableSearch, disableSearch }                 from "./transcript-search.js";
 
 // ── Init ──────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", () => {
   initWaveform();
   bindEvents();
+  initSearch();
 });
 
 // ── Event binding ─────────────────────────────────────────
@@ -88,19 +90,25 @@ function bindEvents() {
   document.addEventListener("click", (e) => {
     if (e.target.closest("[data-action='edit']")) {
       const segments = getSegments();
+      disableSearch();           // search non ha senso in edit mode
       renderEditor(segments);
     }
     if (e.target.closest("[data-action='save-changes']")) {
       const edited = getEditedSegments();
       exitEditor();
       renderTranscript(edited, "", "segments");
+      // enableSearch viene chiamato via auris:transcript-ready
     }
     if (e.target.closest("[data-action='cancel-edit']")) {
       exitEditor();
       const segments = getSegments();
       renderTranscript(segments, "", "segments");
+      // enableSearch viene chiamato via auris:transcript-ready
     }
   });
+
+  // Transcript ready — abilitare search dopo ogni render
+  document.addEventListener("auris:transcript-ready", enableSearch);
 }
 
 // ── File handling ─────────────────────────────────────────

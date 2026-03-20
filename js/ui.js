@@ -127,7 +127,6 @@ export function setFileLoaded(filename, objectUrl) {
  * Called whenever model or audio state changes.
  */
 export function updateTranscribeBtn() {
-  // Read from data attributes set by other modules
   const modelReady = document.body.dataset.modelReady === "true";
   const audioReady = document.body.dataset.audioReady === "true";
   document.getElementById("btnTranscribe").disabled = !(modelReady && audioReady);
@@ -174,7 +173,6 @@ export function renderTranscript(segments, language, mode) {
   const body  = document.getElementById("transcriptBody");
   const badge = document.getElementById("langBadge");
 
-  // Language badge
   if (language) {
     badge.textContent = language.toUpperCase();
     badge.classList.add("transcript__lang-badge--visible");
@@ -202,6 +200,7 @@ export function renderTranscript(segments, language, mode) {
     .join("");
 
   ensureEditButton();
+  document.dispatchEvent(new CustomEvent("auris:transcript-ready"));
 }
 
 export function ensureEditButton() {
